@@ -1,0 +1,32 @@
+<header>
+  <nav class="round">
+    <ul>
+      <% if signed_in? %>
+      <li><%= link_to "My Profile", current_user %></li>   
+      <li><%= link_to "Settings", edit_user_path(current_user) %></li>
+      <li><%= link_to "Friends", user_friends_path(current_user) %></li>
+      <li><%= link_to "Sign out", signout_path, :method => :delete %></li>
+            <li style="float:right; padding-right: 16px;"><%= link_to current_user.first_name, current_user %>  </span>
+      <li style="float:right;  padding-right: 7px;"><%= link_to( image_tag(current_user.avatar.url(:thumb)), current_user) %></li>
+      
+ <li style="float:right;padding-top:-10px;padding-right:35px;">     
+        <% form_tag users_path, :method => 'get' do %>
+
+          <%= text_field_tag :search, params[:search] %>
+          <%= submit_tag "Search", :first_name => nil %>
+
+        <% end %>
+  </li>
+      
+      
+      
+
+    
+      <% else %>
+      <li><%= link_to "Sign in", signin_path %></li>
+      </span>
+      <% end %>
+    
+    </ul>
+  </nav>
+</header>

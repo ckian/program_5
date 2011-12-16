@@ -1,0 +1,25 @@
+<h1>Listing users</h1>
+
+<table>
+<% @users.each do |user| %>
+  <tr style="height:60px;">
+    <td><%= link_to( image_tag(user.avatar.url(:thumb)), user_path(user.id)) %></td>
+    <td><%= link_to user.first_name, user_path(user.id) %> <%= link_to user.last_name, user_path(user.id) %></td>
+    <td>
+      <% if signed_in? %>
+        <% unless user.id == current_user.id || current_user.requested_friends.include?(user) || current_user.friends.include?(user) || current_user.pending_friends.include?(user) %>
+          <% form_for(:friendship, :url => user_friends_path(:user_id => current_user.id, :friend_id => user.id)) do |f| %>
+            <%= submit_tag "Add Friend" %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </td>
+      
+      
+      
+  </tr>
+<% end %>
+
+</table>
+
+

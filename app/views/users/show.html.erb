@@ -1,0 +1,95 @@
+<html>
+  <head>
+
+  </head>
+  <body style= "padding-top: 45px;">
+    <p id="notice"><%= notice %></p>
+    
+    <div>
+
+      <%= link_to( image_tag(@user.avatar.url(:medium)), @user.avatar.url(:original)) %>
+
+      <%= @user.first_name %> <%= @user.last_name %>
+      <br />
+      Friends: <%= @user.friends.count %>
+      <br />
+      <% if current_user == @user %>
+        Friend Requests: <%= @user.pending_friends.count %>
+        <br />
+        Pending Requests: <%= @user.requested_friends.count %>
+        <br />
+      <% end %>
+
+    </div>
+
+<%= form_for @user, :html => {:multipart => true} do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+<hr style="width 73%;noshade">
+  
+  <br />
+  <br />
+
+
+  <div class="existingPaperclipFiles">
+    <% $i = 0 %>
+    <table>
+      <tr height = 170px>
+        <% f.fields_for :assets do |asset| %>
+          <% unless asset.object.new_record? %>
+            <div class="thumbnail">
+              <% if $i == 5 %>
+                <% $i = 0 %>
+                </tr>
+                <tr height = 170px>
+              <% end %>
+              <td width = 170px; align="center">            
+              <%= link_to( image_tag(asset.object.image.url(:medium)),
+                  asset.object.image.url(:original), :class => "top_up" ) %>
+              </td>
+            </div>            
+          <% end %>
+          <% $i +=1 %>
+        <% end %>
+      </tr>
+    </table>
+  </div>
+
+  <% if @user == current_user %>
+    <div style="width:90%;">
+    <div>
+    <% f.fields_for :assets do |asset| %>
+      <% if asset.object.new_record? %>
+         <%= f.label :image, "Add more photos!" %>
+        <%= asset.file_field :image %>
+      <% end %>
+    <% end %>
+    <br />
+    <div>
+        <%= f.submit "Upload" %>
+    </div>
+    </div>
+    </div>
+  <% end %>
+
+<% end %>
+
+ <% if signed_in? %>
+    <% unless @user == current_user || current_user.requested_friends.include?(@user) || current_user.friends.include?(@user) || current_user.pending_friends.include?(@user) %>
+      <% form_for(:friendship, :url => user_friends_path(:user_id => current_user.id, :friend_id => @user.id)) do |f| %>
+        <%= submit_tag "Add to My Friends" %>
+      <% end %>
+    <% end %>
+  <% end %>
+  </body>
+</html

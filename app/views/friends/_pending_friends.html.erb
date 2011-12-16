@@ -1,0 +1,17 @@
+<% unless @user.pending_friends.empty? %>
+  <div style="height:250px;width:300px;overflow-y:scroll;overflow-x:hidden;background-color:#DDD">
+    <% @user.pending_friends.each do |u| %>
+      <span style ="padding-left: 4px;">
+        <%= link_to( image_tag(u.avatar.url(:thumb)), @user) %>
+        <%= link_to u.first_name, user_path(u.id) %>
+      </span>
+      <% if signed_in? && @user = current_user %>
+        <span style ="float:right;padding-right: 4px;">
+          <%= link_to '[Accept]', user_friend_path(:user_id => current_user, :id => u), :method => :put, :confirm => 'Accept friend request! Are you sure?' %> |
+          <%= link_to '[Decline]', user_friend_path(:user_id => current_user, :id => u), :method => :delete, :confirm => 'Reject friend request! Are you sure?' %>
+        </span>
+        <br />
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,19 @@
+<% unless @user.requested_friends.empty? %>
+  <div style="height:250px;width:300px;overflow-y:scroll;overflow-x:hidden;background-color:#DDD">
+    <% @user.requested_friends.each do |u| %>
+      <span style ="padding-left: 4px;">
+        <%= link_to( image_tag(u.avatar.url(:thumb)), @user) %>
+        <%= link_to u.first_name, user_path(u.id) %>
+      </span>
+      <% if signed_in? && @user = current_user %>
+        <span style ="float:right;padding-right: 4px;padding-top:5px;">
+      
+          <%= link_to '[Cancel]', user_friend_path(@user,u),
+                                                   :method => :delete,
+                                                   :confirm => 'Are you sure?' %>
+        </span>
+        <br />
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
